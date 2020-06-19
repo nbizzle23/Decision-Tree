@@ -1,0 +1,223 @@
+---
+title: "Predicting NBA Player Positions Using Decision Tree"
+author: "Nicholas Burke"
+date: "05 December 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+This project will use the computer program R to generate a decision tree to determine NBA player’s positions. Using statistical data from the website, basketballreference.com a decision tree more specifically a classification tree can be made. Classification trees can be used to sort categorical data in which this statistics are, it can be used to classify player's position. In one of the following  
+
+•	Point Guard
+
+•	Shooting Guard
+
+•	Small Forward
+
+•	Power Forward
+
+•	Center
+
+Based on their respective statistics that have been tracked and documented throughout the season.
+
+The statistics include:
+
+•	Games
+
+•	 Games started
+
+•	Minutes
+
+•	 2pt & 3pt field goals/attempts
+
+•	Free throws/attempts
+
+•	 Assists, turnovers
+
+•	Rebounds
+
+•	Fouls
+
+•	Blocks
+
+•	Steals
+
+•	 Offensive and Defensive rating
+
+For playing time discrepancies among players we will use per 100 possessions statisitics to level it out. The outcome of the decision tree will show the value of each category based on position the players. These values can be used to determine threshold certain players have to reach at their respective position.
+
+Next we will outline the R code and the output it generates to construct a decision tree. 
+
+Firstly in order to generate a decision tree which must have some data in order to input in the mechanism.  To import data from the website basketballreference.com, we must install the supporting packages 
+
+
+```{r}
+library (magrittr) 
+library (ggplot2)
+library (janitor) 
+library (scales) 
+library(ballr)
+
+```
+
+
+## NBA Statistics in R
+
+Now that we have called all of the necessary dependencies. We can now view NBA statistics in R. 
+
+For the construction of this decision tree will we use all the player’s statistics per 100 possessions for the current year.  The use of per 100 possessions statisitics is important to make sure all players are measure equal to get a representative reading in the decision tree.
+
+Below is the first 6 entries of the per 100 possessions per game statisitics for all 708 NBA players.
+
+```{r}
+per_100 <- NBAPerGameStatisticsPer100Poss(season = 2019)
+head(per_100) 
+```
+
+In order to see the entire list of all 708 players with 33 different categories, selecting the environment tab in R Studio. Of these 33 categories certain ones will be omitted I the construction for the construction of the decision tree. For some more obvious reasons the variables
+
+•	name
+
+•	x
+
+•	 link
+
+•	 games
+
+•	games started
+
+•	percentages
+
+•	fouls
+
+•	rnk
+
+•	team
+
+Should not be used be for they are not viable options in categories players by positions.
+
+The other variables that will be used in the decision tree are 
+
+•	fg, fga
+
+•	x3p, x3pa
+
+•	x2p, x2pa
+
+•	ft, fta
+
+•	trb
+
+•	ast, tov
+
+•	blk, stl
+
+•	pts
+
+Now we will create a vector in R to identity these statistics and generate an appropriate data frame of these new parameters. 
+
+Below is the first 6 entries of all 708 NBA players in the new data frame.
+```{r}
+P100 <- per_100[,c("pos","fg","fga","x3p","x3pa","x2p","x2pa","ft","fta","trb","ast","blk","stl","tov","pts")] 
+head (P100)
+
+```
+
+
+Vital for the decision tree to work we must create a character string for each position.
+
+•	"C"
+
+•	"PF"
+
+•	"SF"
+
+•	"SG"
+
+•	"PG" 
+
+```{r}
+per_100$pos= as.character(per_100$pos) 
+```
+
+Now we can begin to construct the visual for the decision tree, by using the package ‘rpart’.  Using this we will be able to used the data frame that we construction to make a classification tree. 
+
+
+```{r}
+library (rpart)
+tree <- rpart(P100 ,data=per_100,method="class")
+
+```
+
+In order to verify which variables were used in making of the decision tree will call on the following function to see.
+
+This will display the complexity parameter table for the fitted Rpart object.
+
+```{r}
+printcp(tree,digit=3)
+```
+
+This shows that the included variables are ast, blk, stl, trb, and x3pa for the construction of the decision tree. The excluded variables are fg, fga, x3p, x2p, x2pa, ft, fta, tov, and pts.
+
+## Decision Tree 
+
+To plot the decision tree, we can follow this R code to call the library, plot the appropriate tree and label accordingly.
+
+
+
+```{r}
+library(rpart.plot) 
+plot(tree, uniform = TRUE, main="Position") 
+text(tree, all=TRUE) 
+
+```
+
+For a better type of the same decision tree
+
+```{r}
+prp(tree) 
+```
+
+
+Another more fancy decision tree plot.
+
+
+```{r}
+library(RColorBrewer)
+library(rattle)
+fancyRpartPlot(tree, cex=0.5, sub = 'Decision Tree', type = 3) 
+
+```
+
+Now for a more in depth look at the decision here are the calculation for each node and respective split in the decision tree.
+
+
+```{r}
+summary(tree)
+```
+
+# Explanation 
+
+
+The root node is the shooting guard position, the first split is total rebounds with the threshold being 9.8 rebounds. This is determined to be the best split of the data. This divides the data into two groups, if above threshold can be classified as centres and below threshold classified as shooting guards. 
+
+The next nodes classifies centres from shooting guards by 3 point attempts at 0.95 which leads to a terminal node for the below value for centres. 
+
+The decision node of 5.9 assists classifies point guards and shooting guards which leads to another terminal node for the above value for point guards.
+
+ To classify shooting guards from power forward the determining factor is 1.5 blocks leading to a terminal node for the above value for power forwards. 
+
+ The decision node of 7 rebounds separates small forwards and shooting guard leading to a terminal node for the below value for shooting guards. 
+
+The last decision nodes are for total rebounds of 12 for above that point for centres and below for power forwards. The other decision node for steals of 1.1 with below for power forwards and above for small forwards.
+
+## Conclusion
+
+Each statistical category can be used to determine the position in which the player will fall into based on total rebounds, 3 point attempts, assists, blocks and steals.  Each decision nodes represent the signification of that category and bench mark for that position. This classification tree can be used to identify players and help team determine what player’s goal and focus should be in certain categories. The classification tree can be extended to a team based model of respective statistics or even narrowed down to a specific team or sets of players.
+
+
