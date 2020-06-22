@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Introduction
 
-This project will use the computer program R to generate a decision tree to determine NBA player’s positions based upon various statistical categories. Data will be used from [basketballreference.com] to construct a classification tree. These types of trees can be used to sort categorical data in which this statistics are, it can be used to classify player's position. In one of the following  
+This project will use the computer program R to generate a decision tree to determine NBA player’s positions based upon various statistical categories. Data will be used from [basketballreference.com](https://www.basketball-reference.com/) to construct a classification tree. These types of trees can be used to sort categorical data appropriately, to classify player's position. As one of the following  
 
 •	Point Guard
 
@@ -23,21 +23,19 @@ This project will use the computer program R to generate a decision tree to dete
 
 •	Center
 
-Based on their respective statistics that have been tracked and documented throughout the season.
+Using these statistics that were tracked over the course of the season
 
-The statistics include:
-
-•	Games
+•	Games played
 
 •	 Games started
 
-•	Minutes
+•	Minutes per game
 
 •	 2pt & 3pt field goals/attempts
 
 •	Free throws/attempts
 
-•	 Assists, turnovers
+•	Assists, turnovers
 
 •	Rebounds
 
@@ -49,11 +47,9 @@ The statistics include:
 
 •	 Offensive and Defensive rating
 
-For playing time discrepancies among players we will use per 100 possessions statisitics to level it out. The outcome of the decision tree will show the value of each category based on position the players. These values can be used to determine threshold certain players have to reach at their respective position.
+To resolve the issue of discrepancies in playing time among players, we will use per 100 possessions statistics. The outcome of the decision tree will show the value of each category based on position the players. These values can be used to determine threshold certain players have to reach at their respective position.
 
-Next we will outline the R code and the output it generates to construct a decision tree. 
-
-Firstly in order to generate a decision tree which must have some data in order to input in the mechanism.  To import data from the website basketballreference.com, we must install the supporting packages 
+Firstly in order to generate a decision tree which must have some data in order to input in the mechanism.  We will import data using the ballr package as well as other necessary dependencies. 
 
 
 ```{r}
@@ -71,15 +67,14 @@ library(ggthemes)
 
 ## NBA Statistics in R
 
-Now that we have called all of the necessary dependencies. We can now view NBA statistics in R. 
+We will now view the player statistics from the 2018-2019 NBA season. It is important to use 100 possessions statistics in order to make sure all players are measure equal to get a representative reading in the decision tree.
 
-For the construction of this decision tree will we use all the player’s statistics per 100 possessions for the current year.  The use of per 100 possessions statisitics is important to make sure all players are measure equal to get a representative reading in the decision tree.
-
-Below is the first 6 entries of the per 100 possessions per game statisitics for all 708 NBA players.
+Below is the first 6 entries of the per 100 possessions per game statistics for all 708 NBA players.
 
 ```{r}
 per_100 <- NBAPerGameStatisticsPer100Poss(season = 2019)
-head(per_100) 
+kable(head(per_100), caption = "Per 100 Stats")
+ 
 ```
 
 In order to see the entire list of all 708 players with 33 different categories, selecting the environment tab in R Studio. Of these 33 categories certain ones will be omitted I the construction for the construction of the decision tree. For some more obvious reasons the variables
@@ -207,9 +202,9 @@ summary(tree)
 # Explanation 
 
 
-The root node is the shooting guard position, the first split is total rebounds with the threshold being 9.8 rebounds. This is determined to be the best split of the data. This divides the data into two groups, if above threshold can be classified as centres and below threshold classified as shooting guards. 
+The root node is the shooting guard position, the first split is total rebounds with the threshold being 9.8 rebounds. This is determined to be the best split of the data. This divides the data into two groups, if above threshold can be classified as centers and below threshold classified as shooting guards. 
 
-The next nodes classifies centres from shooting guards by 3 point attempts at 0.95 which leads to a terminal node for the below value for centres. 
+The next nodes classifies centers from shooting guards by 3 point attempts at 0.95 which leads to a terminal node for the below value for centers. 
 
 The decision node of 5.9 assists classifies point guards and shooting guards which leads to another terminal node for the above value for point guards.
 
@@ -217,7 +212,7 @@ The decision node of 5.9 assists classifies point guards and shooting guards whi
 
  The decision node of 7 rebounds separates small forwards and shooting guard leading to a terminal node for the below value for shooting guards. 
 
-The last decision nodes are for total rebounds of 12 for above that point for centres and below for power forwards. The other decision node for steals of 1.1 with below for power forwards and above for small forwards.
+The last decision nodes are for total rebounds of 12 for above that point for centers and below for power forwards. The other decision node for steals of 1.1 with below for power forwards and above for small forwards.
 
 ## Conclusion
 

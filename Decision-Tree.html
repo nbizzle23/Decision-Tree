@@ -187,17 +187,16 @@ summary {
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>This project will use the computer program R to generate a decision tree to determine NBA player’s positions based upon various statistical categories. Data will be used from [basketballreference.com] to construct a classification tree. These types of trees can be used to sort categorical data in which this statistics are, it can be used to classify player’s position. In one of the following</p>
+<p>This project will use the computer program R to generate a decision tree to determine NBA player’s positions based upon various statistical categories. Data will be used from <a href="https://www.basketball-reference.com/">basketballreference.com</a> to construct a classification tree. These types of trees can be used to sort categorical data appropriately, to classify player’s position. As one of the following</p>
 <p>• Point Guard</p>
 <p>• Shooting Guard</p>
 <p>• Small Forward</p>
 <p>• Power Forward</p>
 <p>• Center</p>
-<p>Based on their respective statistics that have been tracked and documented throughout the season.</p>
-<p>The statistics include:</p>
-<p>• Games</p>
+<p>Using these statistics that were tracked over the course of the season</p>
+<p>• Games played</p>
 <p>• Games started</p>
-<p>• Minutes</p>
+<p>• Minutes per game</p>
 <p>• 2pt &amp; 3pt field goals/attempts</p>
 <p>• Free throws/attempts</p>
 <p>• Assists, turnovers</p>
@@ -206,9 +205,8 @@ summary {
 <p>• Blocks</p>
 <p>• Steals</p>
 <p>• Offensive and Defensive rating</p>
-<p>For playing time discrepancies among players we will use per 100 possessions statisitics to level it out. The outcome of the decision tree will show the value of each category based on position the players. These values can be used to determine threshold certain players have to reach at their respective position.</p>
-<p>Next we will outline the R code and the output it generates to construct a decision tree.</p>
-<p>Firstly in order to generate a decision tree which must have some data in order to input in the mechanism. To import data from the website basketballreference.com, we must install the supporting packages</p>
+<p>To resolve the issue of discrepancies in playing time among players, we will use per 100 possessions statistics. The outcome of the decision tree will show the value of each category based on position the players. These values can be used to determine threshold certain players have to reach at their respective position.</p>
+<p>Firstly in order to generate a decision tree which must have some data in order to input in the mechanism. We will import data using the ballr package as well as other necessary dependencies.</p>
 <pre><code>## 
 ## Attaching package: 'janitor'</code></pre>
 <pre><code>## The following objects are masked from 'package:stats':
@@ -217,9 +215,8 @@ summary {
 </div>
 <div id="nba-statistics-in-r" class="section level2">
 <h2>NBA Statistics in R</h2>
-<p>Now that we have called all of the necessary dependencies. We can now view NBA statistics in R.</p>
-<p>For the construction of this decision tree will we use all the player’s statistics per 100 possessions for the current year. The use of per 100 possessions statisitics is important to make sure all players are measure equal to get a representative reading in the decision tree.</p>
-<p>Below is the first 6 entries of the per 100 possessions per game statisitics for all 708 NBA players.</p>
+<p>We will now view the player statistics from the 2018-2019 NBA season. It is important to use 100 possessions statistics in order to make sure all players are measure equal to get a representative reading in the decision tree.</p>
+<p>Below is the first 6 entries of the per 100 possessions per game statistics for all 708 NBA players.</p>
 <pre><code>## Warning: `data_frame()` is deprecated as of tibble 1.1.0.
 ## Please use `tibble()` instead.
 ## This warning is displayed once every 8 hours.
@@ -237,27 +234,258 @@ summary {
 ##   list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))
 ## This warning is displayed once every 8 hours.
 ## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
-<pre><code>##   rk       player pos age  tm  g gs   mp  fg  fga fgpercent x3p x3pa x3ppercent
-## 1  1 Álex Abrines  SG  25 OKC 31  2  588 4.4 12.5     0.357 3.3 10.1      0.323
-## 2  2   Quincy Acy  PF  28 PHO 10  0  123 1.6  7.0     0.222 0.8  5.8      0.133
-## 3  3 Jaylen Adams  PG  22 ATL 34  1  428 4.1 11.9     0.345 2.7  8.0      0.338
-## 4  4 Steven Adams   C  25 OKC 80 80 2669 8.4 14.1     0.595 0.0  0.0      0.000
-## 5  5  Bam Adebayo   C  21 MIA 82 28 1913 7.2 12.4     0.576 0.1  0.4      0.200
-## 6  6    Deng Adel  SF  21 CLE 19  3  194 2.8  9.2     0.306 1.5  5.9      0.261
-##   x2p x2pa x2ppercent  ft fta ftpercent orb  drb  trb ast stl blk tov  pf  pts
-## 1 1.2  2.4      0.500 1.0 1.0     0.923 0.4  3.4  3.8 1.6 1.3 0.5 1.1 4.2 13.1
-## 2 0.8  1.2      0.667 2.7 3.9     0.700 1.2  8.5  9.7 3.1 0.4 1.6 1.6 9.3  6.6
-## 3 1.4  3.9      0.361 0.8 1.0     0.778 1.2  5.3  6.5 7.0 1.5 0.5 3.0 4.9 11.7
-## 4 8.4 14.1      0.596 2.6 5.1     0.500 6.8  6.5 13.3 2.2 2.0 1.3 2.4 3.6 19.4
-## 5 7.1 12.0      0.588 4.2 5.8     0.735 4.2 11.0 15.2 4.7 1.8 1.7 3.1 5.2 18.6
-## 6 1.3  3.3      0.385 1.0 1.0     1.000 0.8  4.1  4.9 1.3 0.3 1.0 1.5 3.3  8.2
-##    x ortg drtg                      link
-## 1 NA  103  111 /players/a/abrinal01.html
-## 2 NA   87  116   /players/a/acyqu01.html
-## 3 NA   99  115 /players/a/adamsja01.html
-## 4 NA  120  106 /players/a/adamsst01.html
-## 5 NA  120  104 /players/a/adebaba01.html
-## 6 NA   85  121  /players/a/adelde01.html</code></pre>
+<table>
+<caption>Per 100 Stats</caption>
+<thead>
+<tr class="header">
+<th align="right">rk</th>
+<th align="left">player</th>
+<th align="left">pos</th>
+<th align="right">age</th>
+<th align="left">tm</th>
+<th align="right">g</th>
+<th align="right">gs</th>
+<th align="right">mp</th>
+<th align="right">fg</th>
+<th align="right">fga</th>
+<th align="right">fgpercent</th>
+<th align="right">x3p</th>
+<th align="right">x3pa</th>
+<th align="right">x3ppercent</th>
+<th align="right">x2p</th>
+<th align="right">x2pa</th>
+<th align="right">x2ppercent</th>
+<th align="right">ft</th>
+<th align="right">fta</th>
+<th align="right">ftpercent</th>
+<th align="right">orb</th>
+<th align="right">drb</th>
+<th align="right">trb</th>
+<th align="right">ast</th>
+<th align="right">stl</th>
+<th align="right">blk</th>
+<th align="right">tov</th>
+<th align="right">pf</th>
+<th align="right">pts</th>
+<th align="right">x</th>
+<th align="right">ortg</th>
+<th align="right">drtg</th>
+<th align="left">link</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">Álex Abrines</td>
+<td align="left">SG</td>
+<td align="right">25</td>
+<td align="left">OKC</td>
+<td align="right">31</td>
+<td align="right">2</td>
+<td align="right">588</td>
+<td align="right">4.4</td>
+<td align="right">12.5</td>
+<td align="right">0.357</td>
+<td align="right">3.3</td>
+<td align="right">10.1</td>
+<td align="right">0.323</td>
+<td align="right">1.2</td>
+<td align="right">2.4</td>
+<td align="right">0.500</td>
+<td align="right">1.0</td>
+<td align="right">1.0</td>
+<td align="right">0.923</td>
+<td align="right">0.4</td>
+<td align="right">3.4</td>
+<td align="right">3.8</td>
+<td align="right">1.6</td>
+<td align="right">1.3</td>
+<td align="right">0.5</td>
+<td align="right">1.1</td>
+<td align="right">4.2</td>
+<td align="right">13.1</td>
+<td align="right">NA</td>
+<td align="right">103</td>
+<td align="right">111</td>
+<td align="left">/players/a/abrinal01.html</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="left">Quincy Acy</td>
+<td align="left">PF</td>
+<td align="right">28</td>
+<td align="left">PHO</td>
+<td align="right">10</td>
+<td align="right">0</td>
+<td align="right">123</td>
+<td align="right">1.6</td>
+<td align="right">7.0</td>
+<td align="right">0.222</td>
+<td align="right">0.8</td>
+<td align="right">5.8</td>
+<td align="right">0.133</td>
+<td align="right">0.8</td>
+<td align="right">1.2</td>
+<td align="right">0.667</td>
+<td align="right">2.7</td>
+<td align="right">3.9</td>
+<td align="right">0.700</td>
+<td align="right">1.2</td>
+<td align="right">8.5</td>
+<td align="right">9.7</td>
+<td align="right">3.1</td>
+<td align="right">0.4</td>
+<td align="right">1.6</td>
+<td align="right">1.6</td>
+<td align="right">9.3</td>
+<td align="right">6.6</td>
+<td align="right">NA</td>
+<td align="right">87</td>
+<td align="right">116</td>
+<td align="left">/players/a/acyqu01.html</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="left">Jaylen Adams</td>
+<td align="left">PG</td>
+<td align="right">22</td>
+<td align="left">ATL</td>
+<td align="right">34</td>
+<td align="right">1</td>
+<td align="right">428</td>
+<td align="right">4.1</td>
+<td align="right">11.9</td>
+<td align="right">0.345</td>
+<td align="right">2.7</td>
+<td align="right">8.0</td>
+<td align="right">0.338</td>
+<td align="right">1.4</td>
+<td align="right">3.9</td>
+<td align="right">0.361</td>
+<td align="right">0.8</td>
+<td align="right">1.0</td>
+<td align="right">0.778</td>
+<td align="right">1.2</td>
+<td align="right">5.3</td>
+<td align="right">6.5</td>
+<td align="right">7.0</td>
+<td align="right">1.5</td>
+<td align="right">0.5</td>
+<td align="right">3.0</td>
+<td align="right">4.9</td>
+<td align="right">11.7</td>
+<td align="right">NA</td>
+<td align="right">99</td>
+<td align="right">115</td>
+<td align="left">/players/a/adamsja01.html</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="left">Steven Adams</td>
+<td align="left">C</td>
+<td align="right">25</td>
+<td align="left">OKC</td>
+<td align="right">80</td>
+<td align="right">80</td>
+<td align="right">2669</td>
+<td align="right">8.4</td>
+<td align="right">14.1</td>
+<td align="right">0.595</td>
+<td align="right">0.0</td>
+<td align="right">0.0</td>
+<td align="right">0.000</td>
+<td align="right">8.4</td>
+<td align="right">14.1</td>
+<td align="right">0.596</td>
+<td align="right">2.6</td>
+<td align="right">5.1</td>
+<td align="right">0.500</td>
+<td align="right">6.8</td>
+<td align="right">6.5</td>
+<td align="right">13.3</td>
+<td align="right">2.2</td>
+<td align="right">2.0</td>
+<td align="right">1.3</td>
+<td align="right">2.4</td>
+<td align="right">3.6</td>
+<td align="right">19.4</td>
+<td align="right">NA</td>
+<td align="right">120</td>
+<td align="right">106</td>
+<td align="left">/players/a/adamsst01.html</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="left">Bam Adebayo</td>
+<td align="left">C</td>
+<td align="right">21</td>
+<td align="left">MIA</td>
+<td align="right">82</td>
+<td align="right">28</td>
+<td align="right">1913</td>
+<td align="right">7.2</td>
+<td align="right">12.4</td>
+<td align="right">0.576</td>
+<td align="right">0.1</td>
+<td align="right">0.4</td>
+<td align="right">0.200</td>
+<td align="right">7.1</td>
+<td align="right">12.0</td>
+<td align="right">0.588</td>
+<td align="right">4.2</td>
+<td align="right">5.8</td>
+<td align="right">0.735</td>
+<td align="right">4.2</td>
+<td align="right">11.0</td>
+<td align="right">15.2</td>
+<td align="right">4.7</td>
+<td align="right">1.8</td>
+<td align="right">1.7</td>
+<td align="right">3.1</td>
+<td align="right">5.2</td>
+<td align="right">18.6</td>
+<td align="right">NA</td>
+<td align="right">120</td>
+<td align="right">104</td>
+<td align="left">/players/a/adebaba01.html</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td align="left">Deng Adel</td>
+<td align="left">SF</td>
+<td align="right">21</td>
+<td align="left">CLE</td>
+<td align="right">19</td>
+<td align="right">3</td>
+<td align="right">194</td>
+<td align="right">2.8</td>
+<td align="right">9.2</td>
+<td align="right">0.306</td>
+<td align="right">1.5</td>
+<td align="right">5.9</td>
+<td align="right">0.261</td>
+<td align="right">1.3</td>
+<td align="right">3.3</td>
+<td align="right">0.385</td>
+<td align="right">1.0</td>
+<td align="right">1.0</td>
+<td align="right">1.000</td>
+<td align="right">0.8</td>
+<td align="right">4.1</td>
+<td align="right">4.9</td>
+<td align="right">1.3</td>
+<td align="right">0.3</td>
+<td align="right">1.0</td>
+<td align="right">1.5</td>
+<td align="right">3.3</td>
+<td align="right">8.2</td>
+<td align="right">NA</td>
+<td align="right">85</td>
+<td align="right">121</td>
+<td align="left">/players/a/adelde01.html</td>
+</tr>
+</tbody>
+</table>
 <p>In order to see the entire list of all 708 players with 33 different categories, selecting the environment tab in R Studio. Of these 33 categories certain ones will be omitted I the construction for the construction of the decision tree. For some more obvious reasons the variables</p>
 <p>• name</p>
 <p>• x</p>
@@ -309,13 +537,13 @@ summary {
 ## 
 ##       CP nsplit rel error xerror   xstd
 ## 1 0.2030      0     1.000  1.000 0.0216
-## 2 0.1635      1     0.797  0.821 0.0243
-## 3 0.0714      2     0.633  0.664 0.0250
-## 4 0.0564      3     0.562  0.594 0.0249
-## 5 0.0357      4     0.506  0.592 0.0249
-## 6 0.0320      5     0.470  0.558 0.0247
-## 7 0.0132      6     0.438  0.502 0.0242
-## 8 0.0100      7     0.425  0.515 0.0244</code></pre>
+## 2 0.1635      1     0.797  0.820 0.0243
+## 3 0.0714      2     0.633  0.660 0.0250
+## 4 0.0564      3     0.562  0.585 0.0248
+## 5 0.0357      4     0.506  0.562 0.0247
+## 6 0.0320      5     0.470  0.530 0.0245
+## 7 0.0132      6     0.438  0.492 0.0241
+## 8 0.0100      7     0.425  0.492 0.0241</code></pre>
 <p>This shows that the included variables are ast, blk, stl, trb, and x3pa for the construction of the decision tree. The excluded variables are fg, fga, x3p, x2p, x2pa, ft, fta, tov, and pts.</p>
 </div>
 <div id="decision-tree" class="section level2">
@@ -338,13 +566,13 @@ summary {
 ## 
 ##           CP nsplit rel error    xerror       xstd
 ## 1 0.20300752      0 1.0000000 1.0000000 0.02161643
-## 2 0.16353383      1 0.7969925 0.8214286 0.02431068
-## 3 0.07142857      2 0.6334586 0.6635338 0.02500767
-## 4 0.05639098      3 0.5620301 0.5939850 0.02486327
-## 5 0.03571429      4 0.5056391 0.5921053 0.02485555
-## 6 0.03195489      5 0.4699248 0.5582707 0.02468146
-## 7 0.01315789      6 0.4379699 0.5018797 0.02424078
-## 8 0.01000000      7 0.4248120 0.5150376 0.02436082
+## 2 0.16353383      1 0.7969925 0.8195489 0.02432761
+## 3 0.07142857      2 0.6334586 0.6597744 0.02500687
+## 4 0.05639098      3 0.5620301 0.5845865 0.02482260
+## 5 0.03571429      4 0.5056391 0.5620301 0.02470410
+## 6 0.03195489      5 0.4699248 0.5300752 0.02448506
+## 7 0.01315789      6 0.4379699 0.4924812 0.02414848
+## 8 0.01000000      7 0.4248120 0.4924812 0.02414848
 ## 
 ## Variable importance
 ##  trb  ast x3pa  blk  x3p  x2p x2pa  tov  stl  fga   fg   ft 
@@ -517,12 +745,12 @@ summary {
 </div>
 <div id="explanation" class="section level1">
 <h1>Explanation</h1>
-<p>The root node is the shooting guard position, the first split is total rebounds with the threshold being 9.8 rebounds. This is determined to be the best split of the data. This divides the data into two groups, if above threshold can be classified as centres and below threshold classified as shooting guards.</p>
-<p>The next nodes classifies centres from shooting guards by 3 point attempts at 0.95 which leads to a terminal node for the below value for centres.</p>
+<p>The root node is the shooting guard position, the first split is total rebounds with the threshold being 9.8 rebounds. This is determined to be the best split of the data. This divides the data into two groups, if above threshold can be classified as centers and below threshold classified as shooting guards.</p>
+<p>The next nodes classifies centers from shooting guards by 3 point attempts at 0.95 which leads to a terminal node for the below value for centers.</p>
 <p>The decision node of 5.9 assists classifies point guards and shooting guards which leads to another terminal node for the above value for point guards.</p>
 <p>To classify shooting guards from power forward the determining factor is 1.5 blocks leading to a terminal node for the above value for power forwards.</p>
 <p>The decision node of 7 rebounds separates small forwards and shooting guard leading to a terminal node for the below value for shooting guards.</p>
-<p>The last decision nodes are for total rebounds of 12 for above that point for centres and below for power forwards. The other decision node for steals of 1.1 with below for power forwards and above for small forwards.</p>
+<p>The last decision nodes are for total rebounds of 12 for above that point for centers and below for power forwards. The other decision node for steals of 1.1 with below for power forwards and above for small forwards.</p>
 <div id="conclusion" class="section level2">
 <h2>Conclusion</h2>
 <p>Each statistical category can be used to determine the position in which the player will fall into based on total rebounds, 3 point attempts, assists, blocks and steals. Each decision nodes represent the signification of that category and bench mark for that position. This classification tree can be used to identify players and help team determine what player’s goal and focus should be in certain categories. The classification tree can be extended to a team based model of respective statistics or even narrowed down to a specific team or sets of players.</p>
