@@ -1,5 +1,6 @@
 # Decision-Tree
-[Decision Tree](https://rpubs.com/nburke2/557065)
+A [Decision Tree](https://rpubs.com/nburke2/557065) to classify player's position based individual performance statistics.
+
 ## Getting Started
 
 This code can directly inputted into your on your local machine to produce the resulting html and images . See section below on how to replicated this project in RStudio.
@@ -13,6 +14,7 @@ instal.packages(magrittr)
 install.packages(janitor) 
 install.packages(scales) 
 install.packages(ballr)
+install.packages(rattle)
 install.packages(knitr)
 install.packages(shiny)
 install.packages(ggplot2)
@@ -30,6 +32,7 @@ library (janitor)
 library (scales) 
 library(ballr)
 library(knitr)
+library(rattle)
 library(ggplot2)
 library(ggthemes)
 

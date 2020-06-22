@@ -6,12 +6,12 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ## Introduction
 
-This project will use the computer program R to generate a decision tree to determine NBA player’s positions. Using statistical data from the website, basketballreference.com a decision tree more specifically a classification tree can be made. Classification trees can be used to sort categorical data in which this statistics are, it can be used to classify player's position. In one of the following  
+This project will use the computer program R to generate a decision tree to determine NBA player’s positions based upon various statistical categories. Data will be used from [basketballreference.com] to construct a classification tree. These types of trees can be used to sort categorical data in which this statistics are, it can be used to classify player's position. In one of the following  
 
 •	Point Guard
 
@@ -62,6 +62,9 @@ library (ggplot2)
 library (janitor) 
 library (scales) 
 library(ballr)
+library(knitr)
+library(ggplot2)
+library(ggthemes)
 
 ```
 
