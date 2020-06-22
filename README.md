@@ -1,5 +1,5 @@
 # Decision-Tree
-A [Decision Tree](https://rpubs.com/nburke2/557065) to classify player's position based individual performance statistics.
+A [Decision Tree](https://rpubs.com/nburke2/557065) to classify player's position based on individual performance statistics.
 
 ## Getting Started
 
