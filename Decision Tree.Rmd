@@ -174,11 +174,33 @@ This will display the complexity parameter table for the fitted Rpart object.
 printcp(tree,digit=3)
 ```
 
-This shows that the included variables are ast, blk, stl, trb, and x3pa for the construction of the decision tree. The excluded variables are fg, fga, x3p, x2p, x2pa, ft, fta, tov, and pts.
+This shows that the included variables are 
+
+• ast
+
+• blk
+
+• stl
+
+• trb
+
+• x3pa 
+
+will be used for the construction of the decision tree. The excluded variables are 
+
+• fg, fga 
+
+• x3p, x2p, x2pa
+
+• ft, fta
+
+• tov
+
+• pts
 
 ## Decision Tree 
 
-To plot the decision tree, we can follow this R code to call the library, plot the appropriate tree and label accordingly.
+To plot the decision tree, we will use the rpart.plot library to plot the appropriate tree and label it accordingly.
 
 
 
@@ -189,14 +211,14 @@ text(tree, all=TRUE)
 
 ```
 
-For a better type of the same decision tree
+Using the prp() function we can generate a better type of the same decision tree
 
 ```{r}
 prp(tree) 
 ```
 
 
-Another more fancy decision tree plot.
+Using the fancyRpartplot() function we can generate a more fancy decision tree plot.
 
 
 ```{r}
@@ -219,17 +241,17 @@ summary(tree)
 # Explanation 
 
 
-The root node is the shooting guard position, the first split is total rebounds with the threshold being 9.8 rebounds. This is determined to be the best split of the data. This divides the data into two groups, if above threshold can be classified as centers and below threshold classified as shooting guards. 
+• The root node is the shooting guard position, the first split is total rebounds with the threshold being 9.8 rebounds. This is determined to be the best split of the data. This divides the data into two groups, if above threshold can be classified as centers and below threshold classified as shooting guards. 
 
-The next nodes classifies centers from shooting guards by 3 point attempts at 0.95 which leads to a terminal node for the below value for centers. 
+• The next nodes classifies centers from shooting guards by 3 point attempts at 0.95 which leads to a terminal node for the below value for centers. 
 
-The decision node of 5.9 assists classifies point guards and shooting guards which leads to another terminal node for the above value for point guards.
+• The decision node of 5.9 assists classifies point guards and shooting guards which leads to another terminal node for the above value for point guards.
 
- To classify shooting guards from power forward the determining factor is 1.5 blocks leading to a terminal node for the above value for power forwards. 
+• To classify shooting guards from power forward the determining factor is 1.5 blocks leading to a terminal node for the above value for power forwards. 
 
- The decision node of 7 rebounds separates small forwards and shooting guard leading to a terminal node for the below value for shooting guards. 
+• The decision node of 7 rebounds separates small forwards and shooting guard leading to a terminal node for the below value for shooting guards. 
 
-The last decision nodes are for total rebounds of 12 for above that point for centers and below for power forwards. The other decision node for steals of 1.1 with below for power forwards and above for small forwards.
+• The last decision nodes are for total rebounds of 12 for above that point for centers and below for power forwards. The other decision node for steals of 1.1 with below for power forwards and above for small forwards.
 
 ## Conclusion
 
