@@ -5,7 +5,7 @@ date: "05 December 2019"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, message=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
@@ -52,7 +52,7 @@ To resolve the issue of discrepancies in playing time among players, we will use
 Firstly in order to generate a decision tree which must have some data in order to input in the mechanism.  We will import data using the ballr package as well as other necessary dependencies. 
 
 
-```{r}
+```{r, message=FALSE}
 library (magrittr) 
 library (ggplot2)
 library (janitor) 
@@ -61,7 +61,11 @@ library(ballr)
 library(knitr)
 library(ggplot2)
 library(ggthemes)
-
+library(dplyr)
+library (rpart)
+library(rpart.plot)
+library(RColorBrewer)
+library(rattle)
 ```
 
 
@@ -69,21 +73,34 @@ library(ggthemes)
 
 We will now view the player statistics from the 2018-2019 NBA season. It is important to use 100 possessions statistics in order to make sure all players are measure equal to get a representative reading in the decision tree.
 
-Below is the first 6 entries of the per 100 possessions per game statistics for all 708 NBA players.
+Below are some of the entries of the per 100 possessions per game statistics for players during the season.
 
-```{r}
+```{r,message=FALSE}
 per_100 <- NBAPerGameStatisticsPer100Poss(season = 2019)
 kable(head(per_100), caption = "Per 100 Stats")
  
 ```
 
-In order to see the entire list of all 708 players with 33 different categories, selecting the environment tab in R Studio. Of these 33 categories certain ones will be omitted I the construction for the construction of the decision tree. For some more obvious reasons the variables
+Let's examine the column names of this data frame using the following function
+
+```{r}
+colnames(per_100)
+```
+
+
+All 33 categories are not neccessarily useful in the construction of the decision tree. Such as the following variables
 
 •	name
 
 •	x
 
 •	 link
+
+•	rnk
+
+•	team
+
+They are of the categorical nature and too unique to each player. Also these variables
 
 •	 games
 
@@ -93,13 +110,11 @@ In order to see the entire list of all 708 players with 33 different categories,
 
 •	fouls
 
-•	rnk
 
-•	team
 
-Should not be used be for they are not viable options in categories players by positions.
+Will not be used be for we are only interested in players by positions and they do not add any extra value to our tree.
 
-The other variables that will be used in the decision tree are 
+The following variables will be used in the decision tree 
 
 •	fg, fga
 
@@ -117,17 +132,18 @@ The other variables that will be used in the decision tree are
 
 •	pts
 
-Now we will create a vector in R to identity these statistics and generate an appropriate data frame of these new parameters. 
+We will construct a new data frame with the statistics of interest and to use going forward 
+Below are some of the entries of our new data frame.
 
-Below is the first 6 entries of all 708 NBA players in the new data frame.
 ```{r}
-P100 <- per_100[,c("pos","fg","fga","x3p","x3pa","x2p","x2pa","ft","fta","trb","ast","blk","stl","tov","pts")] 
-head (P100)
+P100 <- per_100 %>%
+  select(pos,fg,fga,x3p,x3pa,x2p,x2pa,ft,fta,trb,ast,blk,stl,tov,pts)
+kable(head (P100), caption = "Per 100 Stats")
 
 ```
 
 
-Vital for the decision tree to work we must create a character string for each position.
+It is vital for the decision tree to work, we must create a character string for each position.
 
 •	"C"
 
@@ -143,13 +159,11 @@ Vital for the decision tree to work we must create a character string for each p
 per_100$pos= as.character(per_100$pos) 
 ```
 
-Now we can begin to construct the visual for the decision tree, by using the package ‘rpart’.  Using this we will be able to used the data frame that we construction to make a classification tree. 
+Now we can begin to construct a visual for the decision tree, by using the package ‘rpart’.  With our new data frame we can construct a classification tree. 
 
 
 ```{r}
-library (rpart)
 tree <- rpart(P100 ,data=per_100,method="class")
-
 ```
 
 In order to verify which variables were used in making of the decision tree will call on the following function to see.
@@ -186,10 +200,13 @@ Another more fancy decision tree plot.
 
 
 ```{r}
-library(RColorBrewer)
-library(rattle)
+
 fancyRpartPlot(tree, cex=0.5, sub = 'Decision Tree', type = 3) 
 
+```
+
+```{r}
+rpart.plot(tree, box.palette="RdBu", shadow.col="gray", nn=TRUE)
 ```
 
 Now for a more in depth look at the decision here are the calculation for each node and respective split in the decision tree.
