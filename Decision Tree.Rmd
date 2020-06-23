@@ -238,7 +238,7 @@ Now for a more in depth look at the decision here are the calculation for each n
 summary(tree)
 ```
 
-# Explanation 
+## Explanation 
 
 
 • The root node is the shooting guard position, the first split is total rebounds with the threshold being 9.8 rebounds. This is determined to be the best split of the data. This divides the data into two groups, if above threshold can be classified as centers and below threshold classified as shooting guards. 

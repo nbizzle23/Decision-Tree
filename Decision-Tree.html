@@ -659,13 +659,13 @@ summary {
 ## 
 ##       CP nsplit rel error xerror   xstd
 ## 1 0.2030      0     1.000  1.000 0.0216
-## 2 0.1635      1     0.797  0.821 0.0243
-## 3 0.0714      2     0.633  0.658 0.0250
-## 4 0.0564      3     0.562  0.618 0.0249
-## 5 0.0357      4     0.506  0.570 0.0247
-## 6 0.0320      5     0.470  0.562 0.0247
-## 7 0.0132      6     0.438  0.483 0.0241
-## 8 0.0100      7     0.425  0.498 0.0242</code></pre>
+## 2 0.1635      1     0.797  0.816 0.0244
+## 3 0.0714      2     0.633  0.654 0.0250
+## 4 0.0564      3     0.562  0.598 0.0249
+## 5 0.0357      4     0.506  0.586 0.0248
+## 6 0.0320      5     0.470  0.556 0.0247
+## 7 0.0132      6     0.438  0.496 0.0242
+## 8 0.0100      7     0.425  0.485 0.0241</code></pre>
 <p>This shows that the included variables are</p>
 <p>• ast</p>
 <p>• blk</p>
@@ -695,13 +695,13 @@ summary {
 ## 
 ##           CP nsplit rel error    xerror       xstd
 ## 1 0.20300752      0 1.0000000 1.0000000 0.02161643
-## 2 0.16353383      1 0.7969925 0.8214286 0.02431068
-## 3 0.07142857      2 0.6334586 0.6578947 0.02500618
-## 4 0.05639098      3 0.5620301 0.6184211 0.02494533
-## 5 0.03571429      4 0.5056391 0.5695489 0.02474689
-## 6 0.03195489      5 0.4699248 0.5620301 0.02470410
-## 7 0.01315789      6 0.4379699 0.4830827 0.02405064
-## 8 0.01000000      7 0.4248120 0.4981203 0.02420452
+## 2 0.16353383      1 0.7969925 0.8157895 0.02436082
+## 3 0.07142857      2 0.6334586 0.6541353 0.02500418
+## 4 0.05639098      3 0.5620301 0.5977444 0.02487812
+## 5 0.03571429      4 0.5056391 0.5864662 0.02483114
+## 6 0.03195489      5 0.4699248 0.5563910 0.02466983
+## 7 0.01315789      6 0.4379699 0.4962406 0.02418606
+## 8 0.01000000      7 0.4248120 0.4849624 0.02407065
 ## 
 ## Variable importance
 ##  trb  ast x3pa  blk  x3p  x2p x2pa  tov  stl  fga   fg   ft 
@@ -872,18 +872,18 @@ summary {
 ##     class counts:     2     0    12     0     0     2    55     1    24     0     0
 ##    probabilities: 0.021 0.000 0.125 0.000 0.000 0.021 0.573 0.010 0.250 0.000 0.000</code></pre>
 </div>
-<div id="explanation" class="section level1">
-<h1>Explanation</h1>
+<div id="explanation" class="section level2">
+<h2>Explanation</h2>
 <p>• The root node is the shooting guard position, the first split is total rebounds with the threshold being 9.8 rebounds. This is determined to be the best split of the data. This divides the data into two groups, if above threshold can be classified as centers and below threshold classified as shooting guards.</p>
 <p>• The next nodes classifies centers from shooting guards by 3 point attempts at 0.95 which leads to a terminal node for the below value for centers.</p>
 <p>• The decision node of 5.9 assists classifies point guards and shooting guards which leads to another terminal node for the above value for point guards.</p>
 <p>• To classify shooting guards from power forward the determining factor is 1.5 blocks leading to a terminal node for the above value for power forwards.</p>
 <p>• The decision node of 7 rebounds separates small forwards and shooting guard leading to a terminal node for the below value for shooting guards.</p>
 <p>• The last decision nodes are for total rebounds of 12 for above that point for centers and below for power forwards. The other decision node for steals of 1.1 with below for power forwards and above for small forwards.</p>
+</div>
 <div id="conclusion" class="section level2">
 <h2>Conclusion</h2>
 <p>Each statistical category can be used to determine the position in which the player will fall into based on total rebounds, 3 point attempts, assists, blocks and steals. Each decision nodes represent the signification of that category and bench mark for that position. This classification tree can be used to identify players and help team determine what player’s goal and focus should be in certain categories. The classification tree can be extended to a team based model of respective statistics or even narrowed down to a specific team or sets of players.</p>
-</div>
 </div>
 
 
