@@ -1,5 +1,5 @@
 # Decision-Tree
-A [decision Tree](https://rpubs.com/nburke2/557065) to classify basketball player's position based on individual performance statistics.
+A [decision tree](https://rpubs.com/nburke2/557065) to classify basketball player's position based on individual performance statistics.
 
 ## Getting Started
 
