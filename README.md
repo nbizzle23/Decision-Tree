@@ -1,5 +1,5 @@
 # Decision-Tree
-A [Decision Tree](https://rpubs.com/nburke2/557065) to classify player's position based on individual performance statistics.
+A [decision tree](https://rpubs.com/nburke2/557065) to classify basketball player's position based on individual performance statistics.
 
 ## Getting Started
 
@@ -16,7 +16,6 @@ install.packages(scales)
 install.packages(ballr)
 install.packages(rattle)
 install.packages(knitr)
-install.packages(shiny)
 install.packages(ggplot2)
 install.packages(ggthemes)
 
@@ -36,19 +35,11 @@ library(rattle)
 library(ggplot2)
 library(ggthemes)
 
-And use the shiny package when running the shiny html
-
-```
-library(shiny)
 
 ```
 
 Will be able to recreate this html document.
 
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
 
 ## Built With
 
